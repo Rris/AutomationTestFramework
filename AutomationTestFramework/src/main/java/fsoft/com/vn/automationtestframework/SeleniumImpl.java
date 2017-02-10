@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -420,7 +421,6 @@ public class SeleniumImpl implements Selenium{
 	 */
 	@Override
 	public String store_data(String locatorID, String locatorString) {
-		SeleniumImpl s = new SeleniumImpl();
 		String result;
 		try {
 			result = (String) wait.until(ExpectedConditions.visibilityOfElementLocated(getBy(locatorID, locatorString))).getText();
@@ -431,4 +431,50 @@ public class SeleniumImpl implements Selenium{
 		}
 		return result;
 	}
+	
+	/* (non-Javadoc)
+	 * @see fsoft.com.vn.AutomationTestWithLookup.Selenium#switchFrame(java.lang.String)
+	 */
+	public void switchFrame(String inputValue) {
+        switch (inputValue) {
+        case "default":
+            driver.switchTo().defaultContent();
+            break;
+        case "contentFrame":
+        	driver.switchTo().parentFrame();
+        default:
+            break;
+        }
+    }
+	
+	/* (non-Javadoc)
+	 * @see fsoft.com.vn.AutomationTestWithLookup.Selenium#deselectDropDown(java.lang.String, java.lang.String)
+	 */
+	public void deselectDropDown(String locatorId, String locatorString) {
+        Select select = new Select((WebElement) ExpectedConditions.visibilityOfElementLocated(getBy(locatorId, locatorString)));
+        select.deselectAll();
+        // select.deselectByIndex(0);
+    }
+
+	/* (non-Javadoc)
+	 * @see fsoft.com.vn.AutomationTestWithLookup.Selenium#closeDriver()
+	 */
+    public void closeDriver() {
+    	driver.close();
+    }
+
+    /* (non-Javadoc)
+	 * @see fsoft.com.vn.AutomationTestWithLookup.Selenium#quitDriver()
+	 */
+    public void quitDriver() {
+    	driver.quit();
+    }
+
+    /* (non-Javadoc)
+	 * @see fsoft.com.vn.AutomationTestWithLookup.Selenium#sendKey()
+	 */
+    public void sendKey() {
+        Actions builder = new Actions(driver);
+        builder.keyDown(Keys.TAB).perform();
+    }
 }
