@@ -48,8 +48,6 @@ public class ReadScript {
 			// Get first/desired sheet from the workbook
 			XSSFSheet sheet = workbook.getSheet("TC01_UI");
 
-			// Iterate through each rows one by one
-			Iterator<Row> rowIterator = sheet.iterator();
 			arrayExcelData = new Object[sheet.getLastRowNum()][numColumn];
 			String titleScript;
 			Cell cell;

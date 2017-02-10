@@ -238,5 +238,37 @@ public interface Selenium{
 	 * @throws RemoteException the remote exception
 	 */
 	public String store_data(String locatorID, String locatorString);
-	
+
+	/**
+	 * Switch frame.
+	 *
+	 * @param inputValue the input value
+	 */
+	public void switchFrame(String inputValue);
+
+	/**
+	 * De-select DropDown.
+	 *
+	 * @param locatorID the locator ID
+	 * @param locatorString the locator string
+	 */
+	public void deselectDropDown(String locatorId, String locatorString);
+
+	/**
+	 * Close driver.
+	 *
+	 */
+	public void closeDriver();
+
+	/**
+	 * Quit driver.
+	 *
+	 */
+	public void quitDriver();
+
+	/**
+	 * Send key.
+	 *
+	 */
+	public void sendKey();
 }
