@@ -424,7 +424,6 @@ public class SeleniumImpl implements Selenium{
 		String result;
 		try {
 			result = (String) wait.until(ExpectedConditions.visibilityOfElementLocated(getBy(locatorID, locatorString))).getText();
-		
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -477,4 +476,15 @@ public class SeleniumImpl implements Selenium{
         Actions builder = new Actions(driver);
         builder.keyDown(Keys.TAB).perform();
     }
+
+	@Override
+	public List<Map<String, String>> load_multi_data(String inputQuery, String expected) throws IOException {
+		return ReadScript.load_multi_data(new File(inputQuery), expected);
+	}
+
+	@Override
+	public void start_loop(String inputParam1, String inputParam2) {
+		
+		
+	}
 }

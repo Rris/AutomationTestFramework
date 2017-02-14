@@ -1,5 +1,6 @@
 package fsoft.com.vn.automationtestframework;
 
+import java.io.IOException;
 import java.rmi.*;
 import java.util.List;
 import java.util.Map;
@@ -271,4 +272,8 @@ public interface Selenium{
 	 *
 	 */
 	public void sendKey();
+	
+	public List<Map<String, String>> load_multi_data(String inputQuery, String expected) throws IOException;
+	public void start_loop(String inputParam1, String inputParam2);
+
 }
