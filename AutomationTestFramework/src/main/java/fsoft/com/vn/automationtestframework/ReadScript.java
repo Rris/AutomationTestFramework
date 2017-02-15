@@ -7,15 +7,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -24,24 +19,24 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * The Class ReadScript.
  */
 public class ReadScript {
-
+	
 	/**
 	 * Read excel data.
 	 *
-	 * @param file
-	 *            the file
-	 * @param numColumn
-	 *            the num column
+	 * @param files the files
+	 * @param numColumn the num column
 	 * @return the object[][]
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@SuppressWarnings("deprecation")
 	public static Object[][] readExcelData(List<File> files, int numColumn) throws IOException {
-
+		
 		Object[][] arrayExcelData = null;
 		List<String> listInputParam;
 		List<String> listOutputParam;
 		int length = 0;
 		int k = 0;
+		int indexUrl = 0;
 		for (File url : files) {
 			FileInputStream fileInputStream = new FileInputStream(url);
 
@@ -67,7 +62,6 @@ public class ReadScript {
 				XSSFSheet sheet = workbook.getSheet("TC01_UI");
 
 				// Iterate through each rows one by one
-				Iterator<Row> rowIterator = sheet.iterator();
 				
 				String titleScript;
 				Cell cell;
@@ -152,6 +146,7 @@ public class ReadScript {
 							break;
 						}
 					}
+					arrayExcelData[k][10] = indexUrl;
 					k++;
 				}
 
@@ -159,6 +154,9 @@ public class ReadScript {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
+			indexUrl++;
+			
 		}
 		return arrayExcelData;
 	}
@@ -166,20 +164,16 @@ public class ReadScript {
 	/**
 	 * Store data return.
 	 *
-	 * @param file
-	 *            the file
-	 * @param rowNumber
-	 *            the row number
-	 * @param outputParam
-	 *            the output param
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param file the file
+	 * @param rowNumber the row number
+	 * @param outputParam the output param
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void store_data_return(File file, int rowNumber, List<String> outputParam)
 			throws FileNotFoundException, IOException {
 		FileInputStream fileInputStream = new FileInputStream(file);
+		@SuppressWarnings("resource")
 		XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
 		XSSFSheet sheet = workbook.getSheet("TC01_UI");
 		int colNumber = sheet.getRow(0).getLastCellNum();
@@ -216,6 +210,15 @@ public class ReadScript {
 		}
 	}
 
+	/**
+	 * Load multi data.
+	 *
+	 * @param file the file
+	 * @param expected the expected
+	 * @return the list
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	@SuppressWarnings("deprecation")
 	public static List<Map<String, String>> load_multi_data(File file, String expected) throws IOException {
 		FileInputStream fileInputStream = new FileInputStream(file);
 		// Create Workbook instance holding reference to .xlsx file
@@ -260,11 +263,4 @@ public class ReadScript {
 		return listMultiData;
 	}
 	
-	public static void main(String[] args) throws IOException {
-		/*List<Map<String, String>> l = load_multi_data(new File("D:\\Selenium\\Data\\test-data-1.xlsx"), "Multi_Data");
-		for (Map<String, String> map : l) {
-			System.out.println(map.get("Search"));
-		}*/
-		
-	}
 }

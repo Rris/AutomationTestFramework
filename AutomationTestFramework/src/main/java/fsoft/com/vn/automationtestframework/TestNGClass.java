@@ -10,22 +10,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.rmi.RemoteException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import org.apache.poi.hssf.util.HSSFColor.GOLD;
-import org.jboss.netty.util.internal.SystemPropertyUtil;
 import org.testng.Assert;
-import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterTest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -34,51 +23,40 @@ import org.testng.annotations.AfterTest;
 public class TestNGClass {
 
 	/** The se impl. */
-	SeleniumImpl seImpl;
+	private SeleniumImpl seImpl;
 
 	/** The url. */
-	List<File> url;
+	private List<File> url;
+
+	/** The index. */
+	private int index = 0;
 
 	/** The i. */
-	int index = 0;
+	private int i = 0;
 
-	int i = 0;
+	/** The row S. */
+	private int rowS = 0;
 
-	boolean flag = false;
+	/** The flag. */
+	private boolean flag = false;
 
-	boolean flag1 = false;
+	/** The flag 1. */
+	private boolean flag1 = false;
 
-	List<Map<String, String>> listMultiData;
+	/** The list multi data. */
+	private List<Map<String, String>> listMultiData;
 
-	List<Object[]> listLoop;
+	/** The list loop. */
+	private List<Object[]> listLoop;
 
 	/**
 	 * Verify automation test.
 	 *
-	 * @param keyWord
-	 *            the key word
-	 * @param locatorID
-	 *            the locator ID
-	 * @param locatorString
-	 *            the locator string
-	 * @param inputValue
-	 *            the input value
-	 * @param row
-	 *            the row
-	 * @param col
-	 *            the col
-	 * @param listInput
-	 *            the list input
-	 * @param listOutput
-	 *            the list output
-	 * @throws FileNotFoundException
-	 *             the file not found exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 * @throws NumberFormatException
-	 *             the number format exception
-	 * @throws InterruptedException
-	 *             the interrupted exception
+	 * @param object the object
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws NumberFormatException the number format exception
+	 * @throws InterruptedException the interrupted exception
 	 */
 	@Test(dataProvider = "dp")
 	public void verifyAutomationTest(Object[] object)
@@ -91,8 +69,15 @@ public class TestNGClass {
 		String col = (String) object[5];
 		String inputQuery = (String) object[6];
 		String expected = (String) object[7];
+		@SuppressWarnings("unchecked")
 		List<String> listInput = (List<String>) object[8];
+		@SuppressWarnings({ "unused", "unchecked" })
 		List<String> listOutput = (List<String>) object[9];
+		if (rowS != (int) object[10]) {
+			rowS = (int) object[10];
+			i = 0;
+		}
+		i++;
 		if (flag1 && listMultiData.get(index).get(inputValue) != null) {
 			inputValue = listMultiData.get(index).get(inputValue);
 		}
@@ -139,18 +124,17 @@ public class TestNGClass {
 		case "table_row_sel":
 			List<String> l_table_row_sel = new ArrayList<String>();
 			l_table_row_sel.add(String.valueOf(seImpl.table_row_sel(locatorID, locatorString, listInput.get(0), col)));
-			/*
-			 * ReadScript.store_data_return(new File(url), i, l_table_row_sel);
-			 */
+
+			ReadScript.store_data_return(url.get((int) object[10]), i, l_table_row_sel);
+
 			break;
 		case "store_cell_data":
 			List<String> l_store_cell_data = new ArrayList<String>();
 			l_store_cell_data
 					.add(String.valueOf(seImpl.store_cell_data(locatorID, locatorString, col, listInput.get(0))));
-			/*
-			 * ReadScript.store_data_return(new File(url), i,
-			 * l_store_cell_data);
-			 */
+
+			ReadScript.store_data_return(url.get((int) object[10]), i, l_store_cell_data);
+
 			break;
 		case "switch_alert_ok":
 			Assert.assertTrue(seImpl.switch_alert_ok());
@@ -171,7 +155,7 @@ public class TestNGClass {
 			String result = seImpl.store_data(locatorID, locatorString);
 			List<String> l_store_data = new ArrayList<String>();
 			l_store_data.add(result);
-			 ReadScript.store_data_return(url.get(0), i, l_store_data); 
+			ReadScript.store_data_return(url.get((int) object[10]), i, l_store_data);
 			break;
 		case "load_multi_data":
 			listMultiData = seImpl.load_multi_data(inputQuery, expected);
@@ -183,7 +167,7 @@ public class TestNGClass {
 			break;
 		case "end_loop":
 			flag = false;
-			loop();
+			Assert.assertTrue(loop());
 			break;
 		default:
 			break;
@@ -191,51 +175,51 @@ public class TestNGClass {
 		if (flag) {
 			listLoop.add(object);
 		}
-		i++;
+
+	}
+
+	/**
+	 * Loop.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws NumberFormatException the number format exception
+	 * @throws InterruptedException the interrupted exception
+	 */
+
+	public boolean loop() throws IOException, NumberFormatException, InterruptedException {
+		try {
+			for (int i = 1; i < listMultiData.size(); i++) {
+				index = i;
+				for (Object[] objects : listLoop) {
+					verifyAutomationTest(objects);
+				}
+			}
+			flag1 = false;
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
 	 * Dp.
 	 *
 	 * @return the object[][]
-	 * @throws IOException
-	 * @throws InterruptedException
-	 * @throws NumberFormatException
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-
-	public void loop() throws IOException, NumberFormatException, InterruptedException {
-		for (int i = 1; i < listMultiData.size(); i++) {
-			index = i;
-			for (Object[] objects : listLoop) {
-				verifyAutomationTest(objects);
-			}
-		}
-		flag1 = false;
-	}
-
-
-
 	@DataProvider
 	public Object[][] dp() throws IOException {
-		Object[][] arrayList = ReadScript.readExcelData(url, 10);
+		Object[][] arrayList = ReadScript.readExcelData(url, 11);
 		return arrayList;
 	}
 
 	/**
 	 * Before class.
-	 *
-	 * @throws RemoteException
-	 *             the remote exception
-	 * @throws UnsupportedLookAndFeelException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 * @throws ClassNotFoundException
 	 */
 	@BeforeClass
 	public void beforeClass() {
 		seImpl = new SeleniumImpl();
 		url = new ArrayList<File>();
-
 		String line = "";
 		try {
 			FileReader fr = new FileReader("../file-selected.txt");
@@ -243,6 +227,7 @@ public class TestNGClass {
 			while ((line = input.readLine()) != null) {
 				url.add(new File(line));
 			}
+			fr.close();
 
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
@@ -253,15 +238,12 @@ public class TestNGClass {
 
 	/**
 	 * After class.
-	 *
-	 * @param result
-	 *            the result
 	 */
 	@AfterClass
 	public void afterClass() {
 		try {
 			File file = new File("../file-selected.txt");
-				file.delete();
+			file.delete();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

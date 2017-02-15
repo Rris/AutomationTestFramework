@@ -2,8 +2,6 @@ package fsoft.com.vn.automationtestframework;
 
 import java.io.File;
 import java.io.IOException;
-import java.rmi.*;
-import java.rmi.server.*;
 import java.util.List;
 import java.util.Map;
 
@@ -24,29 +22,17 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class SeleniumImpl implements Selenium{
 	
 	/** The driver. */
-	WebDriver driver;
+	private WebDriver driver;
 	
 	/** The wait. */
-	WebDriverWait wait;
+	private WebDriverWait wait;
 	
 	/** The element. */
-	WebElement element;
+	private WebElement element;
 	
 	/** The by. */
-	By by;
+	private By by;
 	
-	/** The flag. */
-	static boolean flag = false;
-    
-    /** The data index. */
-    static int dataIndex = 0;
-    
-    /** The from line. */
-    static int fromLine = 0;
-    
-    /** The loop times. */
-    static int loopTimes = 0;
-    
     /** The sub data. */
     static List<Map<String, String>> subData = null; 
 	
@@ -477,11 +463,17 @@ public class SeleniumImpl implements Selenium{
         builder.keyDown(Keys.TAB).perform();
     }
 
+	/* (non-Javadoc)
+	 * @see fsoft.com.vn.automationtestframework.Selenium#load_multi_data(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public List<Map<String, String>> load_multi_data(String inputQuery, String expected) throws IOException {
 		return ReadScript.load_multi_data(new File(inputQuery), expected);
 	}
 
+	/* (non-Javadoc)
+	 * @see fsoft.com.vn.automationtestframework.Selenium#start_loop(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void start_loop(String inputParam1, String inputParam2) {
 		
